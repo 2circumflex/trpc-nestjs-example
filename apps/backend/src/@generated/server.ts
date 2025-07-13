@@ -13,6 +13,7 @@ const appRouter = t.router({
       avatar: z.string().nullable(),
       createdAt: z.date(),
       updatedAt: z.date(),
+      // password는 응답에서 제외
     }))).query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     getUserById: publicProcedure.input(z.object({ id: z.number() })).output(z.object({
       id: z.number(),
@@ -21,10 +22,12 @@ const appRouter = t.router({
       avatar: z.string().nullable(),
       createdAt: z.date(),
       updatedAt: z.date(),
+      // password는 응답에서 제외
     })).query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     createUser: publicProcedure.input(z.object({
       email: z.string().email(),
       name: z.string().min(1),
+      password: z.string().min(6, "비밀번호는 최소 6자 이상이어야 합니다"),
       avatar: z.string().optional(),
     })).output(z.object({
       id: z.number(),
@@ -33,6 +36,7 @@ const appRouter = t.router({
       avatar: z.string().nullable(),
       createdAt: z.date(),
       updatedAt: z.date(),
+      // password는 응답에서 제외
     })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
   })
 });

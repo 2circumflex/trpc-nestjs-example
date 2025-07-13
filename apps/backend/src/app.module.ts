@@ -20,12 +20,6 @@ import { UserModule } from "./user/user.module";
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
         url: configService.get<string>("DATABASE_URL"),
-        // 또는 개별 설정 사용
-        // host: configService.get<string>('DB_HOST'),
-        // port: configService.get<number>('DB_PORT'),
-        // username: configService.get<string>('DB_USERNAME'),
-        // password: configService.get<string>('DB_PASSWORD'),
-        // database: configService.get<string>('DB_NAME'),
         entities: [__dirname + "/**/*.entity{.ts,.js}"],
         synchronize: configService.get<string>("NODE_ENV") === "development", // 개발 환경에서만 사용
         logging: configService.get<string>("NODE_ENV") === "development",

@@ -11,12 +11,19 @@ const userSchema = z.object({
   avatar: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  // password는 응답에서 제외
 });
 
 const createUserSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1),
+  password: z.string().min(6, "비밀번호는 최소 6자 이상이어야 합니다"),
   avatar: z.string().optional(),
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
 });
 
 @Injectable()
