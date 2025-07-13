@@ -16,7 +16,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "typeorm": "typeorm-ts-node-commonjs -d src/database/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +33,7 @@
     "@trpc/server": "^10.45.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.0",
     "nestjs-trpc": "^1.6.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
