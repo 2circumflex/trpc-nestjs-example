@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
+import { User } from "../user/user.entity";
 
 @Entity()
 export class Post {
@@ -21,7 +24,11 @@ export class Post {
   isPublic: boolean; // 공개/비공개 설정
 
   @Column()
-  authorId: number; // 작성자 ID (User와의 관계는 나중에 설정)
+  authorId: number; // 작성자 ID
+
+  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: "authorId" })
+  author: User;
 
   @CreateDateColumn()
   createdAt: Date;

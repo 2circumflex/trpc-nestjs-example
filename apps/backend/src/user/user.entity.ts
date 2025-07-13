@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+import { Post } from "../post/post.entity";
 
 @Entity()
 export class User {
@@ -25,6 +27,9 @@ export class User {
 
   @Column({ nullable: true })
   refreshToken?: string; // JWT 리프레시 토큰
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   type: "postgres",
   url: configService.get<string>("DATABASE_URL"),
   entities: [User, Post],
-  migrations: ["src/database/migrations/*.ts"],
+  migrations: ["src/database/migrations/*.js"],
   synchronize: false, // 마이그레이션 사용 시 false로 설정
   logging: configService.get<string>("NODE_ENV") === "development",
   ssl:
