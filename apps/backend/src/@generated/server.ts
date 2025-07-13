@@ -38,6 +38,33 @@ const appRouter = t.router({
       updatedAt: z.date(),
       // password는 응답에서 제외
     })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
+  }),
+  auth: t.router({
+    login: publicProcedure.input(z.object({
+      email: z.string().email(),
+      password: z.string(),
+    })).output(z.object({
+      access_token: z.string(),
+      user: z.object({
+        id: z.number(),
+        email: z.string(),
+        name: z.string(),
+        avatar: z.string().nullable(),
+      }),
+    })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    register: publicProcedure.input(z.object({
+      email: z.string().email(),
+      name: z.string().min(1),
+      password: z.string().min(6, "비밀번호는 최소 6자 이상이어야 합니다"),
+    })).output(z.object({
+      access_token: z.string(),
+      user: z.object({
+        id: z.number(),
+        email: z.string(),
+        name: z.string(),
+        avatar: z.string().nullable(),
+      }),
+    })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
   })
 });
 export type AppRouter = typeof appRouter;

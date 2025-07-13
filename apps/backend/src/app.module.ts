@@ -5,6 +5,7 @@ import { TRPCModule } from "nestjs-trpc";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { UserModule } from "./user/user.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { UserModule } from "./user/user.module";
 
     // 기능 모듈들
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
