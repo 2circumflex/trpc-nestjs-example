@@ -3,6 +3,8 @@ import { Router, Query, Mutation } from "nestjs-trpc";
 import { Injectable } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { TRPCError } from "@trpc/server";
+import { JwtGuard } from "../auth/jwt.guard";
+import { requireAuth, optionalAuth } from "../auth/auth.utils";
 
 // Zod 스키마 정의
 const postSchema = z.object({
@@ -30,12 +32,10 @@ const createPostSchema = z.object({
     .max(200, "Title must be less than 200 characters"),
   content: z.string().min(1, "Content is required"),
   isPublic: z.boolean().optional().default(true),
-  authorId: z.number().int().positive(), // 임시로 authorId를 직접 받음 (나중에 JWT에서 추출)
 });
 
 const updatePostSchema = z.object({
   id: z.number().int().positive(),
-  userId: z.number().int().positive(),
   data: z.object({
     title: z.string().min(1).max(200).optional(),
     content: z.string().min(1).optional(),
@@ -46,24 +46,32 @@ const updatePostSchema = z.object({
 @Injectable()
 @Router({ alias: "posts" })
 export class PostRouter {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly jwtGuard: JwtGuard
+  ) {}
 
   // 포스트 생성
   @Mutation({
     input: createPostSchema,
     output: postSchema,
   })
-  async createPost(input: z.infer<typeof createPostSchema>) {
+  async createPost(input: z.infer<typeof createPostSchema>, ctx: any) {
     try {
+      const user = await requireAuth(this.jwtGuard, ctx.req);
+
       return await this.postService.createPost(
         {
           title: input.title,
           content: input.content,
           isPublic: input.isPublic,
         },
-        input.authorId
+        user.id
       );
     } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create post",
@@ -109,14 +117,18 @@ export class PostRouter {
   @Query({
     input: z.object({
       id: z.number().int().positive(),
-      userId: z.number().int().positive().optional(),
     }),
     output: postSchema,
   })
-  async getPostById({ id, userId }: { id: number; userId?: number }) {
+  async getPostById({ id }: { id: number }, ctx: any) {
     try {
-      return await this.postService.getPublicPostById(id, userId);
+      const user = await optionalAuth(this.jwtGuard, ctx.req);
+
+      return await this.postService.getPublicPostById(id, user?.id);
     } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
       if (error.message.includes("not found")) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -142,14 +154,15 @@ export class PostRouter {
     input: updatePostSchema,
     output: postSchema,
   })
-  async updatePost(input: z.infer<typeof updatePostSchema>) {
+  async updatePost(input: z.infer<typeof updatePostSchema>, ctx: any) {
     try {
-      return await this.postService.updatePost(
-        input.id,
-        input.data,
-        input.userId
-      );
+      const user = await requireAuth(this.jwtGuard, ctx.req);
+
+      return await this.postService.updatePost(input.id, input.data, user.id);
     } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
       if (error.message.includes("not found")) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -174,15 +187,19 @@ export class PostRouter {
   @Mutation({
     input: z.object({
       id: z.number().int().positive(),
-      userId: z.number().int().positive(),
     }),
     output: z.object({ success: z.boolean() }),
   })
-  async deletePost({ id, userId }: { id: number; userId: number }) {
+  async deletePost({ id }: { id: number }, ctx: any) {
     try {
-      await this.postService.deletePost(id, userId);
+      const user = await requireAuth(this.jwtGuard, ctx.req);
+
+      await this.postService.deletePost(id, user.id);
       return { success: true };
     } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
       if (error.message.includes("not found")) {
         throw new TRPCError({
           code: "NOT_FOUND",

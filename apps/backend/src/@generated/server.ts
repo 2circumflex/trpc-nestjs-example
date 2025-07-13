@@ -74,7 +74,6 @@ const appRouter = t.router({
         .max(200, "Title must be less than 200 characters"),
       content: z.string().min(1, "Content is required"),
       isPublic: z.boolean().optional().default(true),
-      authorId: z.number().int().positive(), // 임시로 authorId를 직접 받음 (나중에 JWT에서 추출)
     })).output(z.object({
       id: z.number(),
       title: z.string(),
@@ -128,7 +127,6 @@ const appRouter = t.router({
     }))).query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     getPostById: publicProcedure.input(z.object({
       id: z.number().int().positive(),
-      userId: z.number().int().positive().optional(),
     })).output(z.object({
       id: z.number(),
       title: z.string(),
@@ -148,7 +146,6 @@ const appRouter = t.router({
     })).query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     updatePost: publicProcedure.input(z.object({
       id: z.number().int().positive(),
-      userId: z.number().int().positive(),
       data: z.object({
         title: z.string().min(1).max(200).optional(),
         content: z.string().min(1).optional(),
@@ -173,7 +170,6 @@ const appRouter = t.router({
     })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     deletePost: publicProcedure.input(z.object({
       id: z.number().int().positive(),
-      userId: z.number().int().positive(),
     })).output(z.object({ success: z.boolean() })).mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
   })
 });
