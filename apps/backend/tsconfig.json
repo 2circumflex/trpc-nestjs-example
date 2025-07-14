@@ -8,6 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
+    "inlineSourceMap": false,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
@@ -21,6 +22,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "types": ["node", "jest"],
     "paths": {
       "@shared/*": ["../../packages/shared/src/*"],
       "@database/*": ["../../packages/database/src/*"]
