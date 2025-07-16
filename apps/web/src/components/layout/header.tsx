@@ -10,14 +10,12 @@ interface HeaderProps {
     name: string;
     email: string;
   };
-  onLogin?: () => void;
   onLogout?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   isAuthenticated = false,
   userInfo,
-  onLogin,
   onLogout,
 }) => {
   return (
@@ -69,9 +67,11 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm" onClick={onLogin}>
-                  로그인
-                </Button>
+                <Link href={"/auth/login" as any}>
+                  <Button variant="ghost" size="sm">
+                    로그인
+                  </Button>
+                </Link>
                 <Link href={"/auth/register" as any}>
                   <Button variant="primary" size="sm">
                     회원가입

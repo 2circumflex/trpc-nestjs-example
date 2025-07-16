@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { Router, Mutation } from "nestjs-trpc";
+import { Router, Mutation, UseMiddlewares } from "nestjs-trpc";
 import { z } from "zod";
 import { AuthService } from "./auth.service";
+import { LoggerMiddleware } from "./logger.middleware";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -26,6 +27,7 @@ const authResponseSchema = z.object({
 
 @Injectable()
 @Router({ alias: "auth" })
+@UseMiddlewares(LoggerMiddleware)
 export class AuthRouter {
   constructor(private readonly authService: AuthService) {}
 

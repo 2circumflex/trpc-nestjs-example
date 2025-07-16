@@ -21,11 +21,6 @@ const createUserSchema = z.object({
   avatar: z.string().optional(),
 });
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
-
 @Injectable()
 @Router({ alias: "users" })
 export class UserRouter {

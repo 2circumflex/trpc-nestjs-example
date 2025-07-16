@@ -1,18 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { trpcClient } from "../lib/trpc";
 import { PostCard, LoadingSpinner, Message, MainLayout } from "@/components";
 
+import { trpc } from "@/lib/trpc";
+
 export default function Home() {
-  const {
-    data: posts,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["posts", "getPublicPosts"],
-    queryFn: () => (trpcClient as any).posts.getPublicPosts.query(),
-  });
+  const postsQuery = trpc.posts.getPublicPosts.useQuery();
+  const { data: posts, isLoading, error } = postsQuery;
 
   if (isLoading) {
     return (

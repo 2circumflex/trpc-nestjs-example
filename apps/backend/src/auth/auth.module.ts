@@ -7,6 +7,8 @@ import { AuthRouter } from "./auth.router";
 import { JwtStrategy } from "./jwt.strategy";
 import { JwtGuard } from "./jwt.guard";
 import { UserModule } from "../user/user.module";
+import { ConsoleLogger } from "@nestjs/common";
+import { LoggerMiddleware } from "./logger.middleware";
 
 @Module({
   imports: [
@@ -21,7 +23,14 @@ import { UserModule } from "../user/user.module";
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, AuthRouter, JwtStrategy, JwtGuard],
+  providers: [
+    AuthService,
+    AuthRouter,
+    JwtStrategy,
+    JwtGuard,
+    ConsoleLogger,
+    LoggerMiddleware,
+  ],
   exports: [AuthService, JwtGuard],
 })
 export class AuthModule {}
