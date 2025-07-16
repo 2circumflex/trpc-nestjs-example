@@ -8,3 +8,7 @@ NestJS + PostgreSQL 백엔드와 tRPC를 활용한 타입 안전한 API 개발
 - **Authentication**: JWT + bcrypt
 - **Database**: PostgreSQL (Railway)
 - **Package Manager**: pnpm workspace
+
+---
+
+이슈가 있어 나중에 처리하기 위해 잠시 개발 중단
